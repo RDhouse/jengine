@@ -1,5 +1,10 @@
 package com.rdhouse.engine;
 
+import org.lwjgl.opengl.GL;
+
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_ESCAPE;
+import static org.lwjgl.glfw.GLFW.glfwWindowShouldClose;
+
 /**
  * Created by rutgerd on 9-9-2016.
  */
@@ -32,10 +37,10 @@ public class GameEngine implements Runnable {
     public void start() {
         running = true;
         gameLoopThread.start();
+
     }
 
     public void stop() {
-        running = false;
         try {
             gameLoopThread.join();
         } catch (InterruptedException e) {
@@ -44,11 +49,41 @@ public class GameEngine implements Runnable {
     }
 
     private void init() {
-
+        window.init();
     }
 
     private void loop() {
+        GL.createCapabilities();
 
+        long lastTime = System.nanoTime();
+        float delta = 0.0f;
+        double ns = 1_000_000_000.0 / 60.0;
+        long timer = System.currentTimeMillis();
+        int updates = 0;
+        int frames = 0;
+        while (running) {
+            long now = System.nanoTime();
+            delta += (now - lastTime) / ns;
+            lastTime = now;
+            if (delta >= 1.0) {
+                update(delta);
+                updates++;
+                delta--;
+                input();
+            }
+            render();
+            frames++;
+            if (System.currentTimeMillis() - timer > 1000) {
+                timer += 1000;
+                System.out.printf("%d ups, %s fps\n", updates, frames);
+                updates = 0;
+                frames = 0;
+            }
+            if (window.isKeyPressed(GLFW_KEY_ESCAPE)) {
+                running = false;
+            }
+        }
+        window.destroy();
     }
 
     protected void input() {
@@ -62,6 +97,7 @@ public class GameEngine implements Runnable {
     protected void render() {
         gameLogic.render(window);
         window.update();
+        stop();
     }
 
 }
