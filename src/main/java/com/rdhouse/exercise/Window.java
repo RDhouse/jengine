@@ -1,4 +1,4 @@
-package com.rdhouse.engine;
+package com.rdhouse.exercise;
 
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
@@ -7,27 +7,21 @@ import org.lwjgl.opengl.GL;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.glClearColor;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 /**
- * Created by RDHouse on 12-9-2016.
+ * Created by rutgerd on 9-9-2016.
  */
 public class Window {
 
     private long windowHandle;
 
-    private int width;
-    private int height;
+    private int width, height;
     private String title;
 
     private boolean vSync = false;
     private boolean resized = false;
-
-    public Window(int width, int height) {
-        this.width = width;
-        this.height = height;
-    }
 
     public Window(int width, int height, String title, boolean vSync) {
         this.width = width;
@@ -36,58 +30,32 @@ public class Window {
         this.vSync = vSync;
     }
 
-    public long getWindowHandle() {
-        return windowHandle;
-    }
-
-    public int getWidth() {
-        return width;
-    }
-
-    public int getHeight() {
-        return height;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public boolean isvSync() {
-        return vSync;
-    }
-
-    public void setvSync(boolean vSync) {
-        this.vSync = vSync;
-    }
-
-    public boolean isResized() {
-        return resized;
-    }
-
-    public void setResized(boolean resized) {
-        this.resized = resized;
-    }
-
     public void init() {
-        // Setup error callback
+        // Setup an error callback. The default implementation
+        // will print the error message in System.err.
         GLFWErrorCallback.createPrint(System.err).set();
 
-        // Init GLFW.
-        if (!glfwInit()) {
-            throw new IllegalStateException("Unable to initialize GLFW!");
-        }
+        // Initialize GLFW. Most GLFW functions will not work before doing this.
+        if ( !glfwInit() )
+            throw new IllegalStateException("Unable to initialize GLFW");
 
-        // Configure Window
-        glfwDefaultWindowHints();
-        glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
+        // Configure our window
+        glfwDefaultWindowHints(); // optional, the current window hints are already the default
+        glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // the window will stay hidden after creation
+        glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // the window will be resizable
 
-        // Create the Window
+        // Create the window
         windowHandle = glfwCreateWindow(width, height, title, NULL, NULL);
-        if (windowHandle == NULL) {
+        if ( windowHandle == NULL )
             throw new RuntimeException("Failed to create the GLFW window");
-        }
 
-        // Resize callback
+        // Setup a key callback. It will be called every time a key is pressed, repeated or released.
+        glfwSetKeyCallback(windowHandle, (window, key, scancode, action, mods) -> {
+            if ( key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE )
+                glfwSetWindowShouldClose(window, true); // We will detect this in our rendering loop
+        });
+
+        // Setup a resize callback
         glfwSetWindowSizeCallback(windowHandle, new GLFWWindowSizeCallback() {
             @Override
             public void invoke(long window, int width, int height) {
@@ -97,10 +65,9 @@ public class Window {
             }
         });
 
-        // Get the resolution of primary moniter
+        // Get the resolution of the primary monitor
         GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-
-        // Center the window
+        // Center our window
         glfwSetWindowPos(
                 windowHandle,
                 (vidmode.width() - width) / 2,
@@ -111,30 +78,46 @@ public class Window {
         glfwMakeContextCurrent(windowHandle);
         GL.createCapabilities();
 
-        // Enable V-sync
+        // Enable v-sync
         if (vSync) glfwSwapInterval(1);
         else glfwSwapInterval(0);
 
-        // Show the window
+        // Make the window visible
         glfwShowWindow(windowHandle);
     }
 
-    public void update() {
-        glfwSwapBuffers(windowHandle);
-        glfwPollEvents();
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    }
-
     public void destroy() {
+        // Free the window callbacks and destroy the window
         glfwFreeCallbacks(windowHandle);
         glfwDestroyWindow(windowHandle);
-
+        // Terminate GLFW and free the error callback
         glfwTerminate();
         glfwSetErrorCallback(null).free();
     }
 
+    public void update() {
+        glfwSwapBuffers(windowHandle); // swap the color buffers
+        glfwPollEvents();
+    }
+
     public boolean isKeyPressed(int keyCode) {
         return glfwGetKey(windowHandle, keyCode) == GLFW_PRESS;
+    }
+
+    public void setResized(boolean resized) {
+        this.resized = resized;
+    }
+
+    public boolean isResized() {
+        return resized;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
     }
 
     public void setClearColor(float r, float g, float b, float a) {
@@ -142,3 +125,4 @@ public class Window {
     }
 
 }
+

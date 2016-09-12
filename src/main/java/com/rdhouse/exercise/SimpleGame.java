@@ -1,8 +1,4 @@
-package com.rdhouse;
-
-import com.rdhouse.engine.GameLogicIntf;
-import com.rdhouse.engine.Renderer;
-import com.rdhouse.engine.Window;
+package com.rdhouse.exercise;
 
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_DOWN;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_UP;

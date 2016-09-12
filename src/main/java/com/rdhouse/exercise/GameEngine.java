@@ -1,9 +1,6 @@
-package com.rdhouse.engine;
-
-import org.lwjgl.opengl.GL;
+package com.rdhouse.exercise;
 
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_ESCAPE;
-import static org.lwjgl.glfw.GLFW.glfwWindowShouldClose;
 
 /**
  * Created by rutgerd on 9-9-2016.
@@ -53,7 +50,6 @@ public class GameEngine implements Runnable {
     }
 
     private void loop() {
-        GL.createCapabilities();
 
         long lastTime = System.nanoTime();
         float delta = 0.0f;

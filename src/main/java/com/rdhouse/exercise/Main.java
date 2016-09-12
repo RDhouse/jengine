@@ -1,7 +1,4 @@
-package com.rdhouse;
-
-import com.rdhouse.engine.GameEngine;
-import com.rdhouse.engine.GameLogicIntf;
+package com.rdhouse.exercise;
 
 /**
  * Created by rutgerd on 9-9-2016.
