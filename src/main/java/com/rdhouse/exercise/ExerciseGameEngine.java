@@ -5,19 +5,19 @@ import static org.lwjgl.glfw.GLFW.GLFW_KEY_ESCAPE;
 /**
  * Created by rutgerd on 9-9-2016.
  */
-public class GameEngine implements Runnable {
+public class ExerciseGameEngine implements Runnable {
 
     private Thread gameLoopThread;
 
-    private Window window;
+    private ExerciseWindow exerciseWindow;
 
-    private GameLogicIntf gameLogic;
+    private ExerciseGameLogicIntf gameLogic;
 
     private boolean running = false;
 
-    public GameEngine(String windowTitle, int width, int height, boolean vSync, GameLogicIntf gameLogic) {
+    public ExerciseGameEngine(String windowTitle, int width, int height, boolean vSync, ExerciseGameLogicIntf gameLogic) {
         gameLoopThread = new Thread(this, "GAME_LOOP_THREAD");
-        window = new Window(width, height, windowTitle, vSync);
+        exerciseWindow = new ExerciseWindow(width, height, windowTitle, vSync);
         this.gameLogic = gameLogic;
     }
 
@@ -46,7 +46,7 @@ public class GameEngine implements Runnable {
     }
 
     private void init() {
-        window.init();
+        exerciseWindow.init();
     }
 
     private void loop() {
@@ -75,15 +75,15 @@ public class GameEngine implements Runnable {
                 updates = 0;
                 frames = 0;
             }
-            if (window.isKeyPressed(GLFW_KEY_ESCAPE)) {
+            if (exerciseWindow.isKeyPressed(GLFW_KEY_ESCAPE)) {
                 running = false;
             }
         }
-        window.destroy();
+        exerciseWindow.destroy();
     }
 
     protected void input() {
-        gameLogic.input(window);
+        gameLogic.input(exerciseWindow);
     }
 
     protected void update(float interval) {
@@ -91,8 +91,8 @@ public class GameEngine implements Runnable {
     }
 
     protected void render() {
-        gameLogic.render(window);
-        window.update();
+        gameLogic.render(exerciseWindow);
+        exerciseWindow.update();
         stop();
     }
 

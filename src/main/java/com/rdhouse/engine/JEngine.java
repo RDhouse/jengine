@@ -13,7 +13,7 @@ public class JEngine implements Runnable {
 
     public JEngine(GameLogic game) {
         gameThread = new Thread(this, "GAME_LOOP_THREAD");
-        window = new Window(800, 600, "Game", true);
+        window = new Window(800, 600, "Game", false);
         gameLogic = game;
     }
 
@@ -39,6 +39,8 @@ public class JEngine implements Runnable {
             loop();
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            cleanUp();
         }
     }
 
@@ -91,5 +93,9 @@ public class JEngine implements Runnable {
     public void render() {
         gameLogic.render(window);
         window.update();
+    }
+
+    public void cleanUp() {
+        gameLogic.cleanUp();
     }
 }

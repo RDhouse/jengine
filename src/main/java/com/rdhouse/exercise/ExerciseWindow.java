@@ -13,7 +13,7 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 /**
  * Created by rutgerd on 9-9-2016.
  */
-public class Window {
+public class ExerciseWindow {
 
     private long windowHandle;
 
@@ -23,7 +23,7 @@ public class Window {
     private boolean vSync = false;
     private boolean resized = false;
 
-    public Window(int width, int height, String title, boolean vSync) {
+    public ExerciseWindow(int width, int height, String title, boolean vSync) {
         this.width = width;
         this.height = height;
         this.title = title;
@@ -59,9 +59,9 @@ public class Window {
         glfwSetWindowSizeCallback(windowHandle, new GLFWWindowSizeCallback() {
             @Override
             public void invoke(long window, int width, int height) {
-                Window.this.width = width;
-                Window.this.height = height;
-                Window.this.setResized(true);
+                ExerciseWindow.this.width = width;
+                ExerciseWindow.this.height = height;
+                ExerciseWindow.this.setResized(true);
             }
         });
 

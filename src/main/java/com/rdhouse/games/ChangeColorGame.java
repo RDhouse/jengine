@@ -1,4 +1,7 @@
-package com.rdhouse.engine;
+package com.rdhouse.games;
+
+import com.rdhouse.engine.GameLogic;
+import com.rdhouse.engine.Window;
 
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_DOWN;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_UP;
@@ -6,7 +9,7 @@ import static org.lwjgl.glfw.GLFW.GLFW_KEY_UP;
 /**
  * Created by RDHouse on 12-9-2016.
  */
-public class SimpleGame implements GameLogic {
+public class ChangeColorGame implements GameLogic {
 
     private int direction = 0;
 
@@ -41,5 +44,10 @@ public class SimpleGame implements GameLogic {
     @Override
     public void render(Window window) {
         window.setClearColor(color, color, color, color);
+    }
+
+    @Override
+    public void cleanUp() {
+
     }
 }

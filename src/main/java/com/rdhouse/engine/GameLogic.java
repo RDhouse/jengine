@@ -13,4 +13,6 @@ public interface GameLogic {
 
     void render(Window window);
 
+    void cleanUp();
+
 }

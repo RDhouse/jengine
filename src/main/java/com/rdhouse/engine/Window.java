@@ -77,11 +77,11 @@ public class Window {
             throw new IllegalStateException("Unable to initialize GLFW!");
         }
 
-        // Configure Window
+        // Configure ExerciseWindow
         glfwDefaultWindowHints();
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 
-        // Create the Window
+        // Create the ExerciseWindow
         windowHandle = glfwCreateWindow(width, height, title, NULL, NULL);
         if (windowHandle == NULL) {
             throw new RuntimeException("Failed to create the GLFW window");

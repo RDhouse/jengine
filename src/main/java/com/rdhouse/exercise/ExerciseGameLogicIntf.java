@@ -3,13 +3,13 @@ package com.rdhouse.exercise;
 /**
  * Created by rutgerd on 9-9-2016.
  */
-public interface GameLogicIntf {
+public interface ExerciseGameLogicIntf {
 
     void init() throws Exception;
 
-    void input(Window window);
+    void input(ExerciseWindow exerciseWindow);
 
     void update(float interval);
 
-    void render(Window window);
+    void render(ExerciseWindow exerciseWindow);
 }

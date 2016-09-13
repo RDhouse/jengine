@@ -7,7 +7,7 @@ import static org.lwjgl.opengl.GL11.glClear;
 /**
  * Created by rutgerd on 9-9-2016.
  */
-public class Renderer {
+public class ExerciseRenderer {
 
     public void init() throws Exception {}
 
