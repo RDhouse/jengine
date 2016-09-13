@@ -1,5 +1,8 @@
 package com.rdhouse.engine;
 
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_ESCAPE;
+import static org.lwjgl.glfw.GLFW.glfwWindowShouldClose;
+
 /**
  * Created by RDHouse on 12-9-2016.
  */
@@ -22,9 +25,8 @@ public class JEngine implements Runnable {
         gameThread.start();
     }
 
-    public void stop() {
-        running = false;
-        window.destroy();
+
+    public void joinThread() {
         try {
             gameThread.join();
         } catch (InterruptedException e) {
@@ -74,7 +76,6 @@ public class JEngine implements Runnable {
                 frames = 0;
             }
         }
-
     }
 
     public void init() throws Exception {
@@ -83,6 +84,9 @@ public class JEngine implements Runnable {
     }
 
     public void handleInput() {
+        if (window.isKeyPressed(GLFW_KEY_ESCAPE)) {
+            running = false;
+        }
         gameLogic.handleInput(window);
     }
 
@@ -97,5 +101,6 @@ public class JEngine implements Runnable {
 
     public void cleanUp() {
         gameLogic.cleanUp();
+        window.destroy();
     }
 }

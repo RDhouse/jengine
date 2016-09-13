@@ -4,6 +4,7 @@ import com.rdhouse.engine.*;
 
 import java.nio.FloatBuffer;
 
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_ESCAPE;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
@@ -80,8 +81,14 @@ public class TriangleGame implements GameLogic {
     }
 
     public static void main(String[] args) {
-        GameLogic game = new TriangleGame();
-        JEngine engine = new JEngine(game);
-        engine.start();
+        try {
+            GameLogic game = new TriangleGame();
+            JEngine engine = new JEngine(game);
+            engine.start();
+            engine.joinThread();
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.exit(-1);
+        }
     }
 }
