@@ -13,7 +13,7 @@ public class JEngine implements Runnable {
 
     public JEngine(GameLogic game) {
         gameThread = new Thread(this, "GAME_LOOP_THREAD");
-        window = new Window(800, 600, "Game", false);
+        window = new Window(800, 600, "Game", true);
         gameLogic = game;
     }
 
