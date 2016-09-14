@@ -5,7 +5,7 @@ package com.rdhouse.engine;
  */
 public interface GameLogic {
 
-    void init() throws Exception;
+    void init(Window window) throws Exception;
 
     void handleInput(Window window);
 

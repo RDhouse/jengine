@@ -1,21 +1,14 @@
-package com.rdhouse.games;
+package com.rdhouse.demo;
 
 import com.rdhouse.engine.*;
 
-import java.nio.FloatBuffer;
-
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_ESCAPE;
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL15.*;
-import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
-import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
-import static org.lwjgl.opengl.GL30.*;
+import static org.lwjgl.opengl.GL11.glViewport;
 
 
 /**
  * Created by rutgerd on 13-9-2016.
  */
-public class TriangleGame implements GameLogic {
+public class ColorMeshDemo implements GameLogic {
 
     ShaderProgram shaderProgram;
     Mesh mesh;
@@ -23,7 +16,7 @@ public class TriangleGame implements GameLogic {
 
 
     @Override
-    public void init() throws Exception {
+    public void init(Window window) throws Exception {
         shaderProgram = new ShaderProgram();
         shaderProgram.createVertexShader(Utils.loadResource("src/main/resources/shaders/vertex.vert"));
         shaderProgram.createFragmentShader(Utils.loadResource("src/main/resources/shaders/fragment.frag"));
@@ -32,13 +25,20 @@ public class TriangleGame implements GameLogic {
         float[] vertices = new float[] {
                 -0.5f, 0.5f, 0.0f,
                 -0.5f, -0.5f, 0.0f,
-                0.5f, 0.5f, 0.0f,
-                0.5f, 0.5f, 0.0f,
-                -0.5f, -0.5f, 0.0f,
-                0.5f, -0.5f, 0.0f
+                0.5f, -0.5f, 0.0f,
+                0.5f, 0.5f, 0.0f
         };
 
-        mesh = new Mesh(vertices);
+        float[] colors = new float[] {
+                0.5f, 0.0f, 0.0f,
+                0.0f, 0.5f, 0.0f,
+                0.0f, 0.0f, 0.5f,
+                0.0f, 0.5f, 0.5f
+        };
+
+        int[] indices = new int[]{0, 1, 3, 3, 1, 2};
+
+        mesh = new Mesh(vertices, colors, indices);
     }
 
     @Override
@@ -53,7 +53,6 @@ public class TriangleGame implements GameLogic {
 
     @Override
     public void render(Window window) {
-
         if (window.isResized()) {
             glViewport(0, 0, window.getWidth(), window.getHeight());
             window.setResized(false);
@@ -61,14 +60,7 @@ public class TriangleGame implements GameLogic {
 
         shaderProgram.bind();
 
-        // Draw the Mesh
-        glBindVertexArray(mesh.getVaoId());
-        glEnableVertexAttribArray(0);
-        glDrawArrays(GL_TRIANGLES, 0, mesh.getVertexCount());
-
-        // Restore state
-        glDisableVertexAttribArray(0);
-        glBindVertexArray(0);
+        mesh.render();
 
         shaderProgram.unbind();
     }
@@ -78,11 +70,14 @@ public class TriangleGame implements GameLogic {
         if (shaderProgram != null)  {
             shaderProgram.cleanUp();
         }
+        if (mesh != null) {
+            mesh.cleanUp();
+        }
     }
 
     public static void main(String[] args) {
         try {
-            GameLogic game = new TriangleGame();
+            GameLogic game = new ColorMeshDemo();
             JEngine engine = new JEngine(game);
             engine.start();
             engine.joinThread();

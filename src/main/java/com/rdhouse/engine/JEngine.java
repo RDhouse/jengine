@@ -1,7 +1,6 @@
 package com.rdhouse.engine;
 
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_ESCAPE;
-import static org.lwjgl.glfw.GLFW.glfwWindowShouldClose;
 
 /**
  * Created by RDHouse on 12-9-2016.
@@ -80,7 +79,7 @@ public class JEngine implements Runnable {
 
     public void init() throws Exception {
         window.init();
-        gameLogic.init();
+        gameLogic.init(window);
     }
 
     public void handleInput() {

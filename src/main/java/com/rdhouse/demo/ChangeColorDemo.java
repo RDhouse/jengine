@@ -1,6 +1,7 @@
-package com.rdhouse.games;
+package com.rdhouse.demo;
 
 import com.rdhouse.engine.GameLogic;
+import com.rdhouse.engine.JEngine;
 import com.rdhouse.engine.Window;
 
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_DOWN;
@@ -9,14 +10,14 @@ import static org.lwjgl.glfw.GLFW.GLFW_KEY_UP;
 /**
  * Created by RDHouse on 12-9-2016.
  */
-public class ChangeColorGame implements GameLogic {
+public class ChangeColorDemo implements GameLogic {
 
     private int direction = 0;
 
     private float color = 0.0f;
 
     @Override
-    public void init() throws Exception {
+    public void init(Window window) throws Exception {
 
     }
 
@@ -49,5 +50,16 @@ public class ChangeColorGame implements GameLogic {
     @Override
     public void cleanUp() {
 
+    }
+
+    public static void main(String[] args) {
+        try {
+            GameLogic game = new ChangeColorDemo();
+            JEngine engine = new JEngine(game);
+            engine.start();
+            engine.joinThread();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

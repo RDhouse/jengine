@@ -5,6 +5,7 @@ import java.io.FileReader;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 
 /**
  * Created by rutgerd on 13-9-2016.
@@ -30,6 +31,12 @@ public class Utils {
 
     public static FloatBuffer createFloatBuffer(float[] src) {
         FloatBuffer result = ByteBuffer.allocateDirect(src.length << 2).order(ByteOrder.nativeOrder()).asFloatBuffer();
+        result.put(src).flip();
+        return result;
+    }
+
+    public static IntBuffer createIntBuffer(int[] src) {
+        IntBuffer result = ByteBuffer.allocateDirect(src.length << 2).order(ByteOrder.nativeOrder()).asIntBuffer();
         result.put(src).flip();
         return result;
     }
