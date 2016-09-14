@@ -2,8 +2,12 @@ package com.rdhouse.engine;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
+import static org.lwjgl.opengl.GL13.glActiveTexture;
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
 import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
@@ -18,11 +22,15 @@ public class Mesh {
     private final int vaoId;
     private final int positionVboId;
     private final int indexVboId;
-    private final int colorsVboId;
+    private final int textVboId;
     private final int vertexCount;
+    private Texture texture;
+    private List<Integer> vboIdList;
 
-    public Mesh(float[] positions, float[] colors, int[] indices) {
+    public Mesh(float[] positions, float[] textCoords, int[] indices, Texture texture) {
+        this.texture = texture;
         vertexCount = indices.length;
+        vboIdList = new ArrayList<>();
 
         // Create the Vertex Array Object
         vaoId = glGenVertexArrays();
@@ -30,20 +38,23 @@ public class Mesh {
 
         // Create the positions vbo
         positionVboId = glGenBuffers();
+        vboIdList.add(positionVboId);
         FloatBuffer verticesBuffer = Utils.createFloatBuffer(positions);
         glBindBuffer(GL_ARRAY_BUFFER, positionVboId);
         glBufferData(GL_ARRAY_BUFFER, verticesBuffer, GL_STATIC_DRAW);
         glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0);
 
-        // Create the color vbo
-        colorsVboId = glGenBuffers();
-        FloatBuffer colorBuffer = Utils.createFloatBuffer(colors);
-        glBindBuffer(GL_ARRAY_BUFFER, colorsVboId);
+        // Create the texture vbo
+        textVboId = glGenBuffers();
+        vboIdList.add(textVboId);
+        FloatBuffer colorBuffer = Utils.createFloatBuffer(textCoords);
+        glBindBuffer(GL_ARRAY_BUFFER, textVboId);
         glBufferData(GL_ARRAY_BUFFER, colorBuffer, GL_STATIC_DRAW);
-        glVertexAttribPointer(1, 3, GL_FLOAT, false, 0, 0);
+        glVertexAttribPointer(1, 2, GL_FLOAT, false, 0, 0);
 
         // Create the indices vbo
         indexVboId = glGenBuffers();
+        vboIdList.add(indexVboId);
         IntBuffer indicesBuffer = Utils.createIntBuffer(indices);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexVboId);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, indicesBuffer, GL_STATIC_DRAW);
@@ -61,6 +72,11 @@ public class Mesh {
     }
 
     public void render() {
+        // Activate first texture unit
+        glActiveTexture(GL_TEXTURE0);
+        // Bind the texture
+        texture.bind();
+
         // Draw the Mesh
         glBindVertexArray(getVaoId());
         glEnableVertexAttribArray(0);
@@ -79,9 +95,13 @@ public class Mesh {
 
         // Delete the VBO
         glBindBuffer(GL_ARRAY_BUFFER, 0);
-        glDeleteBuffers(positionVboId);
-        glDeleteBuffers(colorsVboId);
-        glDeleteBuffers(indexVboId);
+        for (int vboId : vboIdList) {
+            glDeleteBuffers(vboId);
+        }
+
+        // Delete the texture
+        texture.cleanUp();
+
         // Delete the VAO
         glBindVertexArray(0);
         glDeleteVertexArrays(vaoId);

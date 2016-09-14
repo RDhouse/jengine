@@ -2,6 +2,8 @@ package com.rdhouse.engine;
 
 import de.matthiasmann.twl.utils.PNGDecoder;
 
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.nio.ByteBuffer;
 
 import static org.lwjgl.opengl.GL11.*;
@@ -27,8 +29,9 @@ public class Texture {
     }
 
     public static int loadTexture(String fileName) throws Exception {
+        InputStream in = new FileInputStream(fileName);
         // Load texture
-        PNGDecoder decoder = new PNGDecoder(Texture.class.getResourceAsStream(fileName));
+        PNGDecoder decoder = new PNGDecoder(in);
 
         // Load texture contents into byte buffer
         ByteBuffer buffer = ByteBuffer.allocateDirect(
@@ -61,6 +64,6 @@ public class Texture {
     }
 
     public void cleanUp() {
-        glDeleteTextures(id);
+        glDeleteTextures(getId());
     }
 }

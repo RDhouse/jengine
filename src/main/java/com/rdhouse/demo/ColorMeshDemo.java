@@ -36,7 +36,7 @@ public class ColorMeshDemo implements GameLogic {
 
         int[] indices = new int[]{0, 1, 3, 3, 1, 2};
 
-        mesh = new Mesh(vertices, colors, indices);
+        mesh = new Mesh(vertices, colors, indices, null);
     }
 
     @Override

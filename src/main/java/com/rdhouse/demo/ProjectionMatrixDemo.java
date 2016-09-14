@@ -49,7 +49,7 @@ public class ProjectionMatrixDemo implements GameLogic {
 
         int[] indices = new int[]{0, 1, 3, 3, 1, 2};
 
-        mesh = new Mesh(positions, colors, indices);
+        mesh = new Mesh(positions, colors, indices, null);
     }
 
     @Override
