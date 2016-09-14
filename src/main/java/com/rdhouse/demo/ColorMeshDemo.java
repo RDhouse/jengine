@@ -13,8 +13,6 @@ public class ColorMeshDemo implements GameLogic {
     ShaderProgram shaderProgram;
     Mesh mesh;
 
-
-
     @Override
     public void init(Window window) throws Exception {
         shaderProgram = new ShaderProgram();

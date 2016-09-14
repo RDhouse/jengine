@@ -14,5 +14,6 @@
     <orderEntry type="library" name="Gradle: org.lwjgl:lwjgl-platform:natives-linux:3.0.0" level="project" />
     <orderEntry type="library" name="Gradle: org.lwjgl:lwjgl-platform:natives-osx:3.0.0" level="project" />
     <orderEntry type="library" name="Gradle: org.joml:joml:1.8.2" level="project" />
+    <orderEntry type="library" name="Gradle: org.l33tlabs.twl:pngdecoder:1.0" level="project" />
   </component>
 </module>

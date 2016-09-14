@@ -117,6 +117,8 @@ public class Window {
         glfwMakeContextCurrent(windowHandle);
         GL.createCapabilities();
 
+        glEnable(GL_DEPTH_TEST);
+
         // Enable V-sync
         if (vSync) glfwSwapInterval(1);
         else glfwSwapInterval(0);
