@@ -17,7 +17,7 @@ public class TransformationsDemo implements GameLogic {
 
     private GameObject[] gameObjects = null;
 
-    private static final float FOV = (float) Math.toRadians(90.0);
+    private static final float FOV = (float) Math.toRadians(90);
     private static final float Z_NEAR = 0.01f;
     private static final float Z_FAR = 1000.0f;
 
@@ -38,59 +38,51 @@ public class TransformationsDemo implements GameLogic {
         shaderProgram.createUniform("projectionMatrix");
         shaderProgram.createUniform("worldMatrix");
 
+        window.setClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
-        float[] positions = new float[] {
-                -0.5f, 0.5f, 0.5f,
-                -0.5f, -0.5f, 0.5f,
-                0.5f, -0.5f, 0.5f,
-                0.5f, 0.5f, 0.5f
+
+        float[] positions = new float[]{
+                -0.5f,  0.5f,  0.5f,
+                -0.5f, -0.5f,  0.5f,
+                0.5f, -0.5f,  0.5f,
+                0.5f,  0.5f,  0.5f,
         };
-
-        float[] colors = new float[] {
+        float[] colours = new float[]{
                 0.5f, 0.0f, 0.0f,
                 0.0f, 0.5f, 0.0f,
                 0.0f, 0.0f, 0.5f,
-                0.0f, 0.5f, 0.5f
+                0.0f, 0.5f, 0.5f,
         };
-
-        int[] indices = new int[]{0, 1, 3, 3, 1, 2};
-
-        Mesh mesh = new Mesh(positions, colors, indices);
-
-        GameObject objectOne = new GameObject(mesh);
-        objectOne.setPosition(0, 0, -2);
-        gameObjects = new GameObject[] {objectOne};
+        int[] indices = new int[]{
+                0, 1, 3, 3, 1, 2,
+        };
+        Mesh mesh = new Mesh(positions, colours, indices);
+        GameObject gameItem = new GameObject(mesh);
+        gameItem.setPosition(0, 0, -2);
+        gameObjects = new GameObject[] { gameItem };
     }
 
     @Override
     public void handleInput(Window window) {
-        displayXInc = 0;
         displayYInc = 0;
+        displayXInc = 0;
         displayZInc = 0;
         scaleInc = 0;
-
         if (window.isKeyPressed(GLFW_KEY_UP)) {
             displayYInc = 1;
-        }
-        if (window.isKeyPressed(GLFW_KEY_DOWN)) {
+        } else if (window.isKeyPressed(GLFW_KEY_DOWN)) {
             displayYInc = -1;
-        }
-        if (window.isKeyPressed(GLFW_KEY_LEFT)) {
+        } else if (window.isKeyPressed(GLFW_KEY_LEFT)) {
             displayXInc = -1;
-        }
-        if (window.isKeyPressed(GLFW_KEY_RIGHT)) {
+        } else if (window.isKeyPressed(GLFW_KEY_RIGHT)) {
             displayXInc = 1;
-        }
-        if (window.isKeyPressed(GLFW_KEY_A)) {
+        } else if (window.isKeyPressed(GLFW_KEY_A)) {
             displayZInc = -1;
-        }
-        if (window.isKeyPressed(GLFW_KEY_Q)) {
+        } else if (window.isKeyPressed(GLFW_KEY_Q)) {
             displayZInc = 1;
-        }
-        if (window.isKeyPressed(GLFW_KEY_Z)) {
+        } else if (window.isKeyPressed(GLFW_KEY_Z)) {
             scaleInc = -1;
-        }
-        if (window.isKeyPressed(GLFW_KEY_X)) {
+        } else if (window.isKeyPressed(GLFW_KEY_X)) {
             scaleInc = 1;
         }
     }
@@ -107,7 +99,7 @@ public class TransformationsDemo implements GameLogic {
 
             // Update scale
             float scale = object.getScale();
-            scale = scaleInc * 0.05f;
+            scale += scaleInc * 0.05f;
             if (scale < 0) {
                 scale = 0;
             }

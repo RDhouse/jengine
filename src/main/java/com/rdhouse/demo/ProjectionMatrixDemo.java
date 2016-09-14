@@ -24,7 +24,7 @@ public class ProjectionMatrixDemo implements GameLogic {
     @Override
     public void init(Window window) throws Exception {
         float aspectRatio = (float) window.getWidth() / window.getHeight();
-        projectionMatrix = new Matrix4f().perspective(FOV, aspectRatio, Z_NEAR, Z_FAR);
+        projectionMatrix = new Matrix4f().identity().perspective(FOV, aspectRatio, Z_NEAR, Z_FAR);
 
         shaderProgram = new ShaderProgram();
         shaderProgram.createVertexShader(Utils.loadResource("src/main/resources/shaders/vertex.vert"));
