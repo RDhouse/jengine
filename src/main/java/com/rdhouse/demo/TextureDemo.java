@@ -1,6 +1,15 @@
 package com.rdhouse.demo;
 
-import com.rdhouse.engine.*;
+import com.rdhouse.engine.graph.Mesh;
+import com.rdhouse.engine.graph.ShaderProgram;
+import com.rdhouse.engine.graph.Texture;
+import com.rdhouse.engine.graph.Transformation;
+import com.rdhouse.engine.input.MouseInput;
+import com.rdhouse.engine.main.GameLogic;
+import com.rdhouse.engine.main.JEngine;
+import com.rdhouse.engine.main.Window;
+import com.rdhouse.engine.model.GameObject;
+import com.rdhouse.engine.utils.Utils;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 

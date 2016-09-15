@@ -1,9 +1,9 @@
 package com.rdhouse.demo;
 
-import com.rdhouse.engine.GameLogic;
-import com.rdhouse.engine.JEngine;
-import com.rdhouse.engine.MouseInput;
-import com.rdhouse.engine.Window;
+import com.rdhouse.engine.main.GameLogic;
+import com.rdhouse.engine.main.JEngine;
+import com.rdhouse.engine.input.MouseInput;
+import com.rdhouse.engine.main.Window;
 
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_DOWN;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_UP;

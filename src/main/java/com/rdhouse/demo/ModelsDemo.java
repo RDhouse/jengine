@@ -1,13 +1,18 @@
 package com.rdhouse.demo;
 
-import com.rdhouse.engine.*;
+import com.rdhouse.engine.graph.*;
+import com.rdhouse.engine.input.MouseInput;
+import com.rdhouse.engine.main.Camera;
+import com.rdhouse.engine.main.GameLogic;
+import com.rdhouse.engine.main.JEngine;
+import com.rdhouse.engine.main.Window;
+import com.rdhouse.engine.model.GameObject;
+import com.rdhouse.engine.utils.Utils;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_X;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_Z;
 import static org.lwjgl.opengl.GL11.glViewport;
 
 /**
@@ -50,11 +55,11 @@ public class ModelsDemo implements GameLogic {
         shaderProgram.createUniform("colour");
         shaderProgram.createUniform("useColour");
 
-        // Mesh mesh = OBJLoader.loadMesh("src/main/resources/models/bunny.obj");
-        Mesh mesh = OBJLoader.loadMesh("src/main/resources/models/cube.obj");
+        //Mesh bunnyModel = OBJLoader.loadMesh("src/main/resources/models/bunny.obj");
+        Mesh cubeModel = OBJLoader.loadMesh("src/main/resources/models/cube.obj");
         Texture texture = new Texture("src/main/resources/textures/grassblock.png");
-        mesh.setTexture(texture);
-        GameObject obj = new GameObject(mesh);
+        cubeModel.setTexture(texture);
+        GameObject obj = new GameObject(cubeModel);
         obj.setScale(0.5f);
         obj.setPosition(0, 0, -2);
         gameObjects = new GameObject[]{obj};
@@ -73,9 +78,9 @@ public class ModelsDemo implements GameLogic {
         } else if (window.isKeyPressed(GLFW_KEY_D)) {
             cameraInc.x = 1;
         }
-        if (window.isKeyPressed(GLFW_KEY_Z)) {
+        if (window.isKeyPressed(GLFW_KEY_Q)) {
             cameraInc.y = -1;
-        } else if (window.isKeyPressed(GLFW_KEY_X)) {
+        } else if (window.isKeyPressed(GLFW_KEY_E)) {
             cameraInc.y = 1;
         }
 
