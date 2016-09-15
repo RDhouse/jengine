@@ -152,10 +152,9 @@ public class Mesh {
     }
 
     public void render() {
-        // Activate first texture unit
-        glActiveTexture(GL_TEXTURE0);
-
         if (texture != null) {
+            // Activate first texture unit
+            glActiveTexture(GL_TEXTURE0);
             // Bind the texture
             texture.bind();
         }
@@ -195,8 +194,26 @@ public class Mesh {
         glDeleteVertexArrays(vaoId);
     }
 
-    public Vector3f getColor() {
-        return color;
+    public boolean isTextured() {
+        return this.texture != null;
     }
+
+    public Texture getTexture() {
+        return texture;
+    }
+
+    public void setTexture(Texture texture) {
+        this.texture = texture;
+    }
+
+    public void setColour(Vector3f colour) {
+        this.color = colour;
+    }
+
+    public Vector3f getColour() {
+        return this.color;
+    }
+
+
 
 }

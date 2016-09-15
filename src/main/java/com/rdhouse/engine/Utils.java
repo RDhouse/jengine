@@ -2,10 +2,9 @@ package com.rdhouse.engine;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
+import java.nio.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by rutgerd on 13-9-2016.
@@ -27,6 +26,19 @@ public class Utils {
             e.printStackTrace();
         }
         return sb.toString();
+    }
+
+    public static List<String> readAllLines(String fileName) {
+        List<String> list = new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                list.add(line);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
     }
 
     public static FloatBuffer createFloatBuffer(float[] src) {
