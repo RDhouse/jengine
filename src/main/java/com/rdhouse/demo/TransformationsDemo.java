@@ -63,7 +63,7 @@ public class TransformationsDemo implements GameLogic {
     }
 
     @Override
-    public void handleInput(Window window) {
+    public void handleInput(Window window, MouseInput mouseInput) {
         displayYInc = 0;
         displayXInc = 0;
         displayZInc = 0;
@@ -88,7 +88,7 @@ public class TransformationsDemo implements GameLogic {
     }
 
     @Override
-    public void update(float interval) {
+    public void update(float interval, MouseInput mouseInput) {
         for (GameObject object : gameObjects) {
             // Update position
             Vector3f objectPos = object.getPosition();

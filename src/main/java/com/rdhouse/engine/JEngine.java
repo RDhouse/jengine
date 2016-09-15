@@ -11,11 +11,14 @@ public class JEngine implements Runnable {
     private Window window;
     private GameLogic gameLogic;
 
+    private MouseInput mouseInput;
+
     private boolean running = false;
 
     public JEngine(GameLogic game) {
         gameThread = new Thread(this, "GAME_LOOP_THREAD");
         window = new Window(800, 600, "Game", true);
+        mouseInput = new MouseInput();
         gameLogic = game;
     }
 
@@ -79,6 +82,7 @@ public class JEngine implements Runnable {
 
     public void init() throws Exception {
         window.init();
+        mouseInput.init(window);
         gameLogic.init(window);
     }
 
@@ -86,11 +90,12 @@ public class JEngine implements Runnable {
         if (window.isKeyPressed(GLFW_KEY_ESCAPE)) {
             running = false;
         }
-        gameLogic.handleInput(window);
+        mouseInput.input(window);
+        gameLogic.handleInput(window, mouseInput);
     }
 
     public void update(float interval) {
-        gameLogic.update(interval);
+        gameLogic.update(interval, mouseInput);
     }
 
     public void render() {

@@ -2,6 +2,7 @@ package com.rdhouse.demo;
 
 import com.rdhouse.engine.GameLogic;
 import com.rdhouse.engine.JEngine;
+import com.rdhouse.engine.MouseInput;
 import com.rdhouse.engine.Window;
 
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_DOWN;
@@ -22,7 +23,7 @@ public class ChangeColorDemo implements GameLogic {
     }
 
     @Override
-    public void handleInput(Window window) {
+    public void handleInput(Window window, MouseInput mouseInput) {
         if (window.isKeyPressed(GLFW_KEY_UP)) {
             direction = 1;
         } else if (window.isKeyPressed(GLFW_KEY_DOWN)) {
@@ -33,7 +34,7 @@ public class ChangeColorDemo implements GameLogic {
     }
 
     @Override
-    public void update(float interval) {
+    public void update(float interval, MouseInput mouseInput) {
         color += direction * 0.01f;
         if (color > 1) {
             color = 1.0f;

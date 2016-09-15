@@ -41,12 +41,12 @@ public class SimpleDemo implements GameLogic {
     }
 
     @Override
-    public void handleInput(Window window) {
+    public void handleInput(Window window, MouseInput mouseInput) {
 
     }
 
     @Override
-    public void update(float interval) {
+    public void update(float interval, MouseInput mouseInput) {
 
     }
 

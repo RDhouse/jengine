@@ -2,16 +2,16 @@ package com.rdhouse.demo;
 
 import com.rdhouse.engine.*;
 import org.joml.Matrix4f;
+import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_X;
 import static org.lwjgl.opengl.GL11.glViewport;
 
 /**
- * Created by RDHouse on 14-9-2016.
+ * Created by rutgerd on 15-9-2016.
  */
-public class TextureDemo implements GameLogic {
+public class CameraDemo implements GameLogic {
 
     private static final float FOV = (float) Math.toRadians(90);
     private static final float Z_NEAR = 0.01f;
@@ -22,6 +22,12 @@ public class TextureDemo implements GameLogic {
     private int displayZInc = 0;
     private int scaleInc = 0;
 
+    private Vector3f cameraInc;
+    private Camera camera;
+
+    private static final float MOUSE_SENS = 0.2f;
+    private static final float CAMERA_STEP = 0.05f;
+
     private Transformation transformation;
 
     private ShaderProgram shaderProgram;
@@ -31,15 +37,17 @@ public class TextureDemo implements GameLogic {
     @Override
     public void init(Window window) throws Exception {
         transformation = new Transformation();
+        camera = new Camera();
+        cameraInc = new Vector3f();
         // Create the shader
         shaderProgram = new ShaderProgram();
-        shaderProgram.createVertexShader(Utils.loadResource("src/main/resources/shaders/texture_vertex.vert"));
-        shaderProgram.createFragmentShader(Utils.loadResource("src/main/resources/shaders/texture_fragment.frag"));
+        shaderProgram.createVertexShader(Utils.loadResource("src/main/resources/shaders/camera_vertex.vert"));
+        shaderProgram.createFragmentShader(Utils.loadResource("src/main/resources/shaders/camera_fragment.frag"));
         shaderProgram.link();
 
         // Create uniforms for world and projection matrices and texture
         shaderProgram.createUniform("projectionMatrix");
-        shaderProgram.createUniform("worldMatrix");
+        shaderProgram.createUniform("modelViewMatrix");
         shaderProgram.createUniform("texture_sampler");
 
         // Create the Mesh
@@ -141,62 +149,57 @@ public class TextureDemo implements GameLogic {
 
         Texture texture = new Texture("src/main/resources/textures/grassblock.png");
         Mesh mesh = new Mesh(positions, textCoords, indices, texture);
-        GameObject object = new GameObject(mesh);
-        object.setPosition(0, 0, -2);
-        gameObjects = new GameObject[] {object};
+
+        GameObject objectOne = new GameObject(mesh);
+        objectOne.setScale(0.5f);
+        objectOne.setPosition(0, 0, -2);
+
+        GameObject objectTwo = new GameObject(mesh);
+        objectTwo.setScale(0.5f);
+        objectTwo.setPosition(0.5f, 0.5f, -2);
+
+        GameObject objectThree = new GameObject(mesh);
+        objectThree.setScale(0.5f);
+        objectThree.setPosition(0, 0, -2.5f);
+
+        GameObject objectFour = new GameObject(mesh);
+        objectFour.setScale(0.5f);
+        objectFour.setPosition(0.5f, 0, -2.5f);
+
+        gameObjects = new GameObject[] {objectOne, objectTwo, objectThree, objectFour};
     }
 
     @Override
     public void handleInput(Window window, MouseInput mouseInput) {
-        displayYInc = 0;
-        displayXInc = 0;
-        displayZInc = 0;
-        scaleInc = 0;
-        if (window.isKeyPressed(GLFW_KEY_UP)) {
-            displayYInc = 1;
-        } else if (window.isKeyPressed(GLFW_KEY_DOWN)) {
-            displayYInc = -1;
-        } else if (window.isKeyPressed(GLFW_KEY_LEFT)) {
-            displayXInc = -1;
-        } else if (window.isKeyPressed(GLFW_KEY_RIGHT)) {
-            displayXInc = 1;
-        } else if (window.isKeyPressed(GLFW_KEY_A)) {
-            displayZInc = -1;
-        } else if (window.isKeyPressed(GLFW_KEY_Q)) {
-            displayZInc = 1;
-        } else if (window.isKeyPressed(GLFW_KEY_Z)) {
-            scaleInc = -1;
-        } else if (window.isKeyPressed(GLFW_KEY_X)) {
-            scaleInc = 1;
+        cameraInc.set(0, 0, 0);
+        if (window.isKeyPressed(GLFW_KEY_W)) {
+            cameraInc.z = -1;
+        } else if (window.isKeyPressed(GLFW_KEY_S)) {
+            cameraInc.z = 1;
         }
+        if (window.isKeyPressed(GLFW_KEY_A)) {
+            cameraInc.x = -1;
+        } else if (window.isKeyPressed(GLFW_KEY_D)) {
+            cameraInc.x = 1;
+        }
+        if (window.isKeyPressed(GLFW_KEY_Z)) {
+            cameraInc.y = -1;
+        } else if (window.isKeyPressed(GLFW_KEY_X)) {
+            cameraInc.y = 1;
+        }
+
     }
 
     @Override
     public void update(float interval, MouseInput mouseInput) {
-        for (GameObject object : gameObjects) {
-            // Update position
-            Vector3f objectPos = object.getPosition();
-            float x = objectPos.x + displayXInc * 0.01f;
-            float y = objectPos.y + displayYInc * 0.01f;
-            float z = objectPos.z + displayZInc * 0.01f;
-            object.setPosition(x, y, z);
+        // update camera pos
+        camera.movePosition(cameraInc.x * CAMERA_STEP, cameraInc.y * CAMERA_STEP, cameraInc.z * CAMERA_STEP);
 
-            // Update scale
-            float scale = object.getScale();
-            scale += scaleInc * 0.05f;
-            if (scale < 0) {
-                scale = 0;
-            }
-            object.setScale(scale);
-
-            // Update rotation angle
-            float rotation = object.getRotation().z + 1.5f;
-            if (rotation > 360) {
-                rotation = 0;
-            }
-            object.setRotation(rotation, rotation, rotation);
+        // update camera based on mouse
+        if (mouseInput.isRightButtonPressed()) {
+            Vector2f rotVec = mouseInput.getDisplacementVec();
+            camera.moveRotation(rotVec.x * MOUSE_SENS, rotVec.y * MOUSE_SENS, 0);
         }
-
     }
 
     @Override
@@ -212,15 +215,20 @@ public class TextureDemo implements GameLogic {
         Matrix4f projectionMatrix = transformation.getProjectionMatrix(FOV, window.getWidth(), window.getHeight(), Z_NEAR, Z_FAR);
         shaderProgram.setUniform("projectionMatrix", projectionMatrix);
 
+        // Update View Matrix
+        Matrix4f viewMatrix = transformation.getViewMatrix(camera);
+
         shaderProgram.setUniform("texture_sampler", 0);
         // Render each gameItem
         for(GameObject gameItem : gameObjects) {
             // Set world matrix for this item
-            Matrix4f worldMatrix = transformation.getWorldMatrix(
-                    gameItem.getPosition(),
-                    gameItem.getRotation(),
-                    gameItem.getScale());
-            shaderProgram.setUniform("worldMatrix", worldMatrix);
+//            Matrix4f worldMatrix = transformation.getWorldMatrix(
+//                    gameItem.getPosition(),
+//                    gameItem.getRotation(),
+//                    gameItem.getScale());
+//            shaderProgram.setUniform("worldMatrix", worldMatrix);
+            Matrix4f modelViewMatrix = transformation.getModelViewMatrix(gameItem, viewMatrix);
+            shaderProgram.setUniform("modelViewMatrix", modelViewMatrix);
             // Render the mes for this game item
             gameItem.getMesh().render();
         }
@@ -241,7 +249,7 @@ public class TextureDemo implements GameLogic {
 
     public static void main(String[] args) {
         try {
-            GameLogic game = new TextureDemo();
+            GameLogic game = new CameraDemo();
             JEngine engine = new JEngine(game);
             engine.start();
             engine.joinThread();

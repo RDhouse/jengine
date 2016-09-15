@@ -20,6 +20,9 @@ public class ColorMeshDemo implements GameLogic {
         shaderProgram.createFragmentShader(Utils.loadResource("src/main/resources/shaders/fragment.frag"));
         shaderProgram.link();
 
+        shaderProgram.createUniform("color");
+        shaderProgram.createUniform("useColor");
+
         float[] vertices = new float[] {
                 -0.5f, 0.5f, 0.0f,
                 -0.5f, -0.5f, 0.0f,
@@ -36,16 +39,16 @@ public class ColorMeshDemo implements GameLogic {
 
         int[] indices = new int[]{0, 1, 3, 3, 1, 2};
 
-        mesh = new Mesh(vertices, colors, indices, null);
+        mesh = new Mesh(vertices, colors, indices);
     }
 
     @Override
-    public void handleInput(Window window) {
+    public void handleInput(Window window, MouseInput mouseInput) {
 
     }
 
     @Override
-    public void update(float interval) {
+    public void update(float interval, MouseInput mouseInput) {
 
     }
 
