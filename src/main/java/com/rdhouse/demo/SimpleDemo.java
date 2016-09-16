@@ -66,7 +66,7 @@ public class SimpleDemo implements GameLogic {
     @Override
     public void cleanUp() {
         if (shaderProgram != null) {
-            shaderProgram.cleanUp();
+            shaderProgram.cleanup();
         }
     }
 

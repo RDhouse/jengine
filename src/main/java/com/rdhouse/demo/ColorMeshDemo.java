@@ -75,7 +75,7 @@ public class ColorMeshDemo implements GameLogic {
     @Override
     public void cleanUp() {
         if (shaderProgram != null)  {
-            shaderProgram.cleanUp();
+            shaderProgram.cleanup();
         }
         if (mesh != null) {
             mesh.cleanUp();

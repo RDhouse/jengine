@@ -24,9 +24,10 @@ public class Mesh {
     private int vboId;
     private final int vertexCount;
     private Texture texture;
+    private Material material;
     private List<Integer> vboIdList;
 
-    private Vector3f color;
+    private Vector3f color = new Vector3f();
 
     public Mesh(float[] positions, float[] colors, int[] indices) {
         vertexCount = indices.length;
@@ -217,6 +218,11 @@ public class Mesh {
         return this.color;
     }
 
+    public Material getMaterial() {
+        return material;
+    }
 
-
+    public void setMaterial(Material material) {
+        this.material = material;
+    }
 }

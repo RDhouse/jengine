@@ -138,11 +138,11 @@ public class TransformationsDemo implements GameLogic {
         // Render each gameObject
         for (GameObject gameObject : gameObjects) {
             // Set the worldMatrix for this item
-            Matrix4f worldMatrix = transformation.getWorldMatrix(
-                    gameObject.getPosition(),
-                    gameObject.getRotation(),
-                    gameObject.getScale());
-            shaderProgram.setUniform("worldMatrix", worldMatrix);
+//            Matrix4f worldMatrix = transformation.getWorldMatrix(
+//                    gameObject.getPosition(),
+//                    gameObject.getRotation(),
+//                    gameObject.getScale());
+//            shaderProgram.setUniform("worldMatrix", worldMatrix);
             // Render the mesh for this game object
             gameObject.getMesh().render();
         }
@@ -155,7 +155,7 @@ public class TransformationsDemo implements GameLogic {
     @Override
     public void cleanUp() {
         if (shaderProgram != null)  {
-            shaderProgram.cleanUp();
+            shaderProgram.cleanup();
         }
         for (GameObject gameObject: gameObjects) {
             gameObject.getMesh().cleanUp();

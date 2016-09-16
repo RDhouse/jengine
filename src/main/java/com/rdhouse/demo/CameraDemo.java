@@ -250,7 +250,7 @@ public class CameraDemo implements GameLogic {
     @Override
     public void cleanUp() {
         if (shaderProgram != null) {
-            shaderProgram.cleanUp();
+            shaderProgram.cleanup();
         }
         for (GameObject gameObject : gameObjects) {
             gameObject.getMesh().cleanUp();

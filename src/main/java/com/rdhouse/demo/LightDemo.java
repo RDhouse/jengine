@@ -11,14 +11,15 @@ import com.rdhouse.engine.utils.Utils;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
+import org.joml.Vector4f;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.glViewport;
 
 /**
- * Created by rutgerd on 15-9-2016.
+ * Created by rutgerd on 16-9-2016.
  */
-public class ModelsDemo implements GameLogic {
+public class LightDemo implements GameLogic {
 
 
     private static final float FOV = (float) Math.toRadians(90);
@@ -31,8 +32,12 @@ public class ModelsDemo implements GameLogic {
     private static final float MOUSE_SENS = 0.2f;
     private static final float CAMERA_STEP = 0.05f;
 
+    private float specularPower;
+
     private Transformation transformation;
     private ShaderProgram shaderProgram;
+    private PointLight pointLight;
+    private Vector3f ambientLight;
     private GameObject[] gameObjects = null;
 
     @Override
@@ -40,32 +45,48 @@ public class ModelsDemo implements GameLogic {
         transformation = new Transformation();
         camera = new Camera();
         cameraInc = new Vector3f();
+        specularPower = 10.0f;
         // Create the shader
         shaderProgram = new ShaderProgram();
-        shaderProgram.createVertexShader(Utils.loadResource("src/main/resources/shaders/model_vertex.vert"));
-        shaderProgram.createFragmentShader(Utils.loadResource("src/main/resources/shaders/model_fragment.frag"));
+        shaderProgram.createVertexShader(Utils.loadResource("src/main/resources/shaders/light_vertex.vert"));
+        shaderProgram.createFragmentShader(Utils.loadResource("src/main/resources/shaders/light_fragment.frag"));
         shaderProgram.link();
 
-        // Create uniforms for world and projection matrices and texture
+        // Create uniforms for modelView and projection matrices and texture
         shaderProgram.createUniform("projectionMatrix");
         shaderProgram.createUniform("modelViewMatrix");
         shaderProgram.createUniform("texture_sampler");
+        // Create uniform for material
+        shaderProgram.createMaterialUniform("material");
+        // Create lighting related uniforms
+        shaderProgram.createUniform("specularPower");
+        shaderProgram.createUniform("ambientLight");
+        shaderProgram.createPointLightUniform("pointLight");
 
-        // Create uniform for default color and the flag that controls it
-        shaderProgram.createUniform("colour");
-        shaderProgram.createUniform("useColour");
+        float reflectance = 1f;
 
-        Mesh bunnyModel = OBJLoader.loadMesh("src/main/resources/models/bunny.obj");
-        Mesh cubeModel = OBJLoader.loadMesh("src/main/resources/models/cube.obj");
+        Mesh mesh = OBJLoader.loadMesh("src/main/resources/models/cube.obj");
         Texture texture = new Texture("src/main/resources/textures/grassblock.png");
-        cubeModel.setTexture(texture);
-        GameObject cube = new GameObject(cubeModel);
-        cube.setScale(0.5f);
-        cube.setPosition(0, 0, -2);
-        GameObject bunny = new GameObject(bunnyModel);
-        cube.setScale(1.5f);
-        cube.setPosition(0, 0, -2);
-        gameObjects = new GameObject[]{cube};
+        Material material = new Material(texture, reflectance);
+
+        mesh.setMaterial(material);
+
+        GameObject gameObject = new GameObject(mesh);
+        gameObject.setScale(0.5f);
+        gameObject.setPosition(0, 0, -2);
+        gameObjects = new GameObject[]{gameObject};
+
+        ambientLight = new Vector3f(0.3f, 0.3f, 0.3f);
+        Vector3f lightColour = new Vector3f(1, 1, 1);
+        Vector3f lightPosition = new Vector3f(0, 0, 1);
+        float lightIntensity = 1.0f;
+        pointLight = new PointLight(lightColour, lightPosition, lightIntensity);
+        PointLight.Attenuation att = new PointLight.Attenuation(0.0f, 0.0f, 1.0f);
+        pointLight.setAttenuation(att);
+
+
+
+
     }
 
     @Override
@@ -85,6 +106,12 @@ public class ModelsDemo implements GameLogic {
             cameraInc.y = -1;
         } else if (window.isKeyPressed(GLFW_KEY_E)) {
             cameraInc.y = 1;
+        }
+        float lightPos = pointLight.getPosition().z;
+        if (window.isKeyPressed(GLFW_KEY_N)) {
+            this.pointLight.getPosition().z = lightPos + 0.1f;
+        } else if (window.isKeyPressed(GLFW_KEY_M)) {
+            this.pointLight.getPosition().z = lightPos - 0.1f;
         }
 
     }
@@ -117,23 +144,36 @@ public class ModelsDemo implements GameLogic {
         // Update View Matrix
         Matrix4f viewMatrix = transformation.getViewMatrix(camera);
 
+        // Update Light Uniforms
+        shaderProgram.setUniform("ambientLight", ambientLight);
+        shaderProgram.setUniform("specularPower", specularPower);
+        // Get a copy of the light object and transform its position to view coordinates
+        PointLight currPointLight = new PointLight(pointLight);
+        Vector3f lightPos = currPointLight.getPosition();
+        Vector4f aux = new Vector4f(lightPos, 1);
+        aux.mul(viewMatrix);
+        lightPos.x = aux.x;
+        lightPos.y = aux.y;
+        lightPos.z = aux.z;
+        shaderProgram.setUniform("pointLight", currPointLight);
+
         shaderProgram.setUniform("texture_sampler", 0);
         // Render each gameItem
-        for(GameObject gameItem : gameObjects) {
+        for(GameObject gameObject : gameObjects) {
             // Set world matrix for this item
 //            Matrix4f worldMatrix = transformation.getWorldMatrix(
 //                    gameItem.getPosition(),
 //                    gameItem.getRotation(),
 //                    gameItem.getScale());
 //            shaderProgram.setUniform("worldMatrix", worldMatrix);
-            Matrix4f modelViewMatrix = transformation.getModelViewMatrix(gameItem, viewMatrix);
+            Matrix4f modelViewMatrix = transformation.getModelViewMatrix(gameObject, viewMatrix);
             shaderProgram.setUniform("modelViewMatrix", modelViewMatrix);
 
-            shaderProgram.setUniform("colour", gameItem.getMesh().getColour());
-            shaderProgram.setUniform("useColour", gameItem.getMesh().isTextured() ? 0 : 1);
+            // Render the mesh for this game item
+            shaderProgram.setUniform("material", gameObject.getMesh().getMaterial());
 
             // Render the mes for this game item
-            gameItem.getMesh().render();
+            gameObject.getMesh().render();
         }
 
         shaderProgram.unbind();
@@ -152,7 +192,7 @@ public class ModelsDemo implements GameLogic {
 
     public static void main(String[] args) {
         try {
-            GameLogic game = new ModelsDemo();
+            GameLogic game = new LightDemo();
             JEngine engine = new JEngine(game);
             engine.start();
             engine.joinThread();

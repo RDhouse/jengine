@@ -225,11 +225,11 @@ public class TextureDemo implements GameLogic {
         // Render each gameItem
         for(GameObject gameItem : gameObjects) {
             // Set world matrix for this item
-            Matrix4f worldMatrix = transformation.getWorldMatrix(
-                    gameItem.getPosition(),
-                    gameItem.getRotation(),
-                    gameItem.getScale());
-            shaderProgram.setUniform("worldMatrix", worldMatrix);
+//            Matrix4f worldMatrix = transformation.getWorldMatrix(
+//                    gameItem.getPosition(),
+//                    gameItem.getRotation(),
+//                    gameItem.getScale());
+//            shaderProgram.setUniform("worldMatrix", worldMatrix);
             // Render the mes for this game item
             gameItem.getMesh().render();
         }
@@ -241,7 +241,7 @@ public class TextureDemo implements GameLogic {
     @Override
     public void cleanUp() {
         if (shaderProgram != null) {
-            shaderProgram.cleanUp();
+            shaderProgram.cleanup();
         }
         for (GameObject gameObject : gameObjects) {
             gameObject.getMesh().cleanUp();
