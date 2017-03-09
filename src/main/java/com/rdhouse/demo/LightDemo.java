@@ -14,7 +14,8 @@ import org.joml.Vector3f;
 import org.joml.Vector4f;
 
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL11.glViewport;
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.GL_LESS;
 
 /**
  * Created by rutgerd on 16-9-2016.
@@ -65,8 +66,8 @@ public class LightDemo implements GameLogic {
 
         float reflectance = 1f;
 
-        Mesh mesh = OBJLoader.loadMesh("src/main/resources/models/cube.obj");
-        Texture texture = new Texture("src/main/resources/textures/grassblock.png");
+        Mesh mesh = OBJLoader.loadMesh("src/main/resources/models/frame00606677.obj");
+        Texture texture = new Texture("src/main/resources/textures/frame006066770.png");
         Material material = new Material(texture, reflectance);
 
         mesh.setMaterial(material);
@@ -134,6 +135,12 @@ public class LightDemo implements GameLogic {
             glViewport(0, 0, window.getWidth(), window.getHeight());
             window.setResized(false);
         }
+
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        // Enable depth test
+        glEnable(GL_DEPTH_TEST);
+        // Accept fragment if it closer to the camera than the former one
+        glDepthFunc(GL_LESS);
 
         shaderProgram.bind();
 

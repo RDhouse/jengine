@@ -94,10 +94,12 @@ public class OBJLoader {
         indicesList.add(posIndex);
 
         // Reorder texture coordinates
-        if (indices.idxTextCoord >= 0) {
-            Vector2f textCoord = textCoordList.get(indices.idxTextCoord);
-            texCoordArr[posIndex * 2] = textCoord.x;
-            texCoordArr[posIndex * 2 + 1] = 1 - textCoord.y;
+        if (textCoordList.size() != 0) {
+            if (indices.idxTextCoord >= 0) {
+                Vector2f textCoord = textCoordList.get(indices.idxTextCoord);
+                texCoordArr[posIndex * 2] = textCoord.x;
+                texCoordArr[posIndex * 2 + 1] = 1 - textCoord.y;
+            }
         }
         if (indices.idxVecNormal >= 0) {
             // Reorder vectornormals
@@ -126,6 +128,10 @@ public class OBJLoader {
         private IdxGroup parseLine(String line) {
             IdxGroup idxGroup = new IdxGroup();
 
+            /*
+            Look in .obj file to see the amount of slashes,
+            this seems to differ between versions of .obj files...
+             */
             String[] lineTokens = line.split("/");
             int length = lineTokens.length;
             idxGroup.idxPos = Integer.parseInt(lineTokens[0]) - 1;

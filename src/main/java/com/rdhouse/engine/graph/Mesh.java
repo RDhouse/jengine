@@ -120,7 +120,7 @@ public class Mesh {
         glBufferData(GL_ARRAY_BUFFER, floatBuffer, GL_STATIC_DRAW);
         glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0);
 
-        // Create the texture vbo
+        //         Create the texture vbo
         vboId = glGenBuffers();
         vboIdList.add(vboId);
         FloatBuffer textureBuffer = Utils.createFloatBuffer(textCoords);

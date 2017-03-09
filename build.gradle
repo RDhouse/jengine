@@ -3,6 +3,7 @@ version '1.0-SNAPSHOT'
 
 apply plugin: 'java'
 apply plugin: 'idea'
+apply plugin: 'application'
 
 repositories {
     mavenCentral()
@@ -16,9 +17,9 @@ dependencies {
 
     // LWJGL
     compile 'org.lwjgl:lwjgl:' + lwjgl_version
-    compile 'org.lwjgl:lwjgl-platform:' + lwjgl_version + ':natives-windows'
-    compile 'org.lwjgl:lwjgl-platform:' + lwjgl_version + ':natives-linux'
-    compile 'org.lwjgl:lwjgl-platform:' + lwjgl_version + ':natives-osx'
+    runtime 'org.lwjgl:lwjgl-platform:' + lwjgl_version + ':natives-windows'
+    runtime 'org.lwjgl:lwjgl-platform:' + lwjgl_version + ':natives-linux'
+    runtime 'org.lwjgl:lwjgl-platform:' + lwjgl_version + ':natives-osx'
 
     // Math
     compile 'org.joml:joml:1.8.2'
@@ -26,3 +27,7 @@ dependencies {
     // PNG decoder
     compile 'org.l33tlabs.twl:pngdecoder:1.0'
 }
+
+mainClassName = 'com.rdhouse.demo.LightDemo'
+
+
