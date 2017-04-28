@@ -66,7 +66,7 @@ public class LightDemo implements GameLogic {
 
         float reflectance = 1f;
 
-        Mesh mesh = OBJLoader.loadMesh("src/main/resources/models/frame00606677.obj");
+        Mesh mesh = OBJLoader.loadMesh("src/main/resources/models/bunny.obj");
         Texture texture = new Texture("src/main/resources/textures/frame006066770.png");
         Material material = new Material(texture, reflectance);
 
